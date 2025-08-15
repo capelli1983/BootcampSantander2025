@@ -40,3 +40,4 @@ public abstract class BaseItem {
         this.description = description;
     }
 }
+

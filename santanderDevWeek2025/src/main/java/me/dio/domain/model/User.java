@@ -1,10 +1,11 @@
 package me.dio.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity(name = "tb_user")
+@JsonInclude(JsonInclude.Include.NON_NULL) // evita retornar campos nulos no JSON
 public class User {
 
     @Id
@@ -14,17 +15,22 @@ public class User {
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id")
     private Account account;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "card_id")
     private Card card;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id") // cria a coluna user_id em tb_feature
     private List<Feature> feature;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id") // cria a coluna user_id em tb_news
     private List<News> news;
 
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -73,3 +79,4 @@ public class User {
         this.news = news;
     }
 }
+
